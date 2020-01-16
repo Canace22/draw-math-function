@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>数学函数绘制</title>
+    <link rel="stylesheet" href="./css/style.css" />
+  </head>
+  <body>
+    <div class="board">
+      <button class="bt" onclick="changeName('系数', '常数', 0)">
+        一次函数
+      </button>
+      <button class="bt" onclick="changeName('系数', '幂', 1)">指数函数</button>
+      <button class="bt" onclick="changeName('系数', '角度', 1)">
+        正弦函数
+      </button>
+      <div class="setting">
+        <div class="item-wrap">
+          <label id="a">系数</label>
+          <input type="text" id="k" placeholder="2" />
+        </div>
+        <div class="item-wrap">
+          <label id="n">常数</label>
+          <input type="text" id="b" placeholder="0" />
+        </div>
+      </div>
+      <button class="bt" onclick="showFx()">确定</button>
+    </div>
+    <canvas id="canvas"></canvas>
+    <script src="./js/math.js"></script>
+    <script>
+      const canvas = document.getElementById('canvas');
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+      const funcLib = new FuncDraw(canvas);
+      funcLib.setColor('lightgrey', 'red');
+      let status = 0;
+      function showFx() {
+        if (status) {
+          showXn();
+        } else {
+          showKx();
+        }
+      }
+      function getKB() {
+        let k = document.getElementById('k').value;
+        let b = document.getElementById('b').value;
+        if (k.indexOf('/') !== -1) {
+          const temp = k.split('/');
+          k = temp[0] / temp[1];
+        }
+        if (b.indexOf('/') !== -1) {
+          const temp = b.split('/');
+          b = temp[0] / temp[1];
+        }
+        return { k: k || 2, b: b || 0 };
+      }
+      // 一次函数
+      function showKx() {
+        const beta = getKB();
+        const k = beta.k;
+        const b = beta.b;
+        funcLib.clear();
+        funcLib.drawCoords();
+        funcLib.drawFx(x => k * x + b, 1, 1);
+      }
+      // 指数函数
+      function showXn() {
+        const beta = getKB();
+        const k = beta.k;
+        const b = beta.b;
+        funcLib.clear();
+        funcLib.drawCoords();
+        funcLib.drawFx(x => k * x ** b, 0.5, 0.5);
+      }
+      // 画正弦函数
+      function showSin() {
+        const beta = getKB();
+        const k = beta.k;
+        const b = beta.b;
+        funcLib.clear();
+        funcLib.drawCoords();
+        funcLib.drawFx(x => Math.sin(k * x * Math.PI + b), 2, 2);
+      }
+
+      function changeName(aName, bName, type) {
+        const a = document.getElementById('a');
+        const n = document.getElementById('n');
+        a.innerHTML = aName;
+        n.innerHTML = bName;
+        status = type;
+      }
+      showFx();
+    </script>
+  </body>
+</html>
